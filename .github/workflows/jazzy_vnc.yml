@@ -46,7 +46,7 @@ jobs:
       - name: Build and push AMD64 image
         run: |
           set -xe
-          docker build docker -f docker/Dockerfile -t ${{ env.DOCKER_IMAGE_AMD64 }} --no-cache --platform linux/amd64
+          docker build jazzy_vnc -f jazzy_vnc/Dockerfile -t ${{ env.DOCKER_IMAGE_AMD64 }} --no-cache --platform linux/amd64
           docker push ${{ env.DOCKER_IMAGE_AMD64 }}
 
   docker-build-arm64:
@@ -64,7 +64,7 @@ jobs:
       - name: Build and push ARM64 image
         run: |
           set -xe
-          docker build docker -f docker/Dockerfile -t ${{ env.DOCKER_IMAGE_ARM64 }} --no-cache --platform linux/arm64/v8
+          docker build jazzy_vnc -f jazzy_vnc/Dockerfile -t ${{ env.DOCKER_IMAGE_ARM64 }} --no-cache --platform linux/arm64/v8
           docker push ${{ env.DOCKER_IMAGE_ARM64 }}
 
   docker-build-manifest:
