@@ -72,6 +72,14 @@ jobs:
     needs: [docker-build-amd64, docker-build-arm64]
     runs-on: ubuntu-latest
     steps:
+      - name: Maximize disk space
+        uses: easimon/maximize-build-space@master
+        with:
+          remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
+          remove-codeql: 'true'
+
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -81,8 +89,11 @@ jobs:
       - name: Pull the latest images for both architectures
         run: |
           set -xe
+          df -h
           docker pull ${{ env.DOCKER_IMAGE_AMD64 }}
+          df -h
           docker pull ${{ env.DOCKER_IMAGE_ARM64 }}
+          df -h
 
       - name: Create and push Docker manifest
         run: |

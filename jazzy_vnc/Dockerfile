@@ -56,8 +56,8 @@ RUN mkdir -p /home/ubuntu/rox_ws/src \
 FROM base
 
 # Copy built workspaces
-COPY --from=builder /home/ubuntu/rmw_zenoh /home/ubuntu/
-COPY --from=builder /home/ubuntu/rox_ws /home/ubuntu/
+COPY --from=builder /home/ubuntu/rmw_zenoh /home/ubuntu/rmw_zenoh
+COPY --from=builder /home/ubuntu/rox_ws /home/ubuntu/rox_ws
 
 # Copy environment and other files
 COPY files_to_copy/ /home/ubuntu/
