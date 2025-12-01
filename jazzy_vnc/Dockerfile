@@ -8,7 +8,7 @@ FROM ${BASE_IMAGE} AS base
 RUN apt-get update && apt upgrade -y && \
     apt-get install -y --no-install-recommends \
         git wget curl gpg vim nano emacs iputils-ping iproute2 net-tools just iftop xterm \
-        python3-colcon-common-extensions \
+        cargo clang python3-colcon-common-extensions \
         ros-${ROS_DISTRO}-rmw-cyclonedds-cpp \
         ros-${ROS_DISTRO}-tinyxml2-vendor \
         ros-${ROS_DISTRO}-rclpy \
@@ -26,7 +26,8 @@ RUN apt-get update && apt upgrade -y && \
 FROM base AS builder
 
 # Build rmw_zenoh from sources for latest version
-RUN mkdir -p /home/ubuntu/rmw_zenoh/src \
+RUN apt-get update \
+    && mkdir -p /home/ubuntu/rmw_zenoh/src \
     && cd /home/ubuntu/rmw_zenoh/src \
     && git clone --branch $ROS_DISTRO https://github.com/ros2/rmw_zenoh.git \
     && cd .. \
