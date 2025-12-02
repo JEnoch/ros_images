@@ -18,25 +18,18 @@ RUN apt-get update && apt upgrade -y && \
         ros-${ROS_DISTRO}-plotjuggler \
         ros-${ROS_DISTRO}-plotjuggler-ros \
         ros-${ROS_DISTRO}-rqt-joint-trajectory-controller \
-        ros-${ROS_DISTRO}-robotiq-description \
-        ros-${ROS_DISTRO}-realsense2-description \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-
-FROM base AS builder
-
-# Build rmw_zenoh from sources for latest version
+# Get sources of packages to build and install their dependencies
+# rmw_zenoh
 RUN apt-get update \
     && mkdir -p /home/ubuntu/rmw_zenoh/src \
     && cd /home/ubuntu/rmw_zenoh/src \
     && git clone --branch $ROS_DISTRO https://github.com/ros2/rmw_zenoh.git \
     && cd .. \
-    && rosdep install --from-paths src --ignore-src --rosdistro $ROS_DISTRO -y \
-    && source /opt/ros/$ROS_DISTRO/setup.bash \
-    && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release \
-    && rm -fr build/ log/
+    && rosdep install --from-paths src --ignore-src --rosdistro $ROS_DISTRO -y
 
-# Build Neobotix ROX simulation packages
+# Neobotix ROX simulation packages
 RUN mkdir -p /home/ubuntu/rox_ws/src \
     && cd /home/ubuntu/rox_ws/src \
     && git clone --branch $ROS_DISTRO     https://github.com/neobotix/rox.git \
@@ -48,7 +41,21 @@ RUN mkdir -p /home/ubuntu/rox_ws/src \
     && git clone --branch master          https://github.com/neobotix/neo_srvs2 \
     && git clone --branch main            https://github.com/neobotix/neo_gz_worlds.git \
     && cd .. \
-    && rosdep install --from-paths ./src --ignore-src --rosdistro $ROS_DISTRO -r --skip-keys "$skip_depend" -y \
+    && rosdep install --from-paths ./src --ignore-src --rosdistro $ROS_DISTRO -r --skip-keys "$skip_depend" -y
+
+# Cleanup
+RUN apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+FROM base AS builder
+
+# Build rmw_zenoh
+RUN cd /home/ubuntu/rmw_zenoh \
+    && source /opt/ros/$ROS_DISTRO/setup.bash \
+    && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release \
+    && rm -fr build/ log/
+
+# Build Neobotix ROX simulation packages
+RUN cd /home/ubuntu/rox_ws \
     && source /opt/ros/$ROS_DISTRO/setup.bash \
     && colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release \
     && rm -fr build/ log/
