@@ -73,7 +73,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Maximize disk space
-        uses: hugoalh/disk-space-optimizer-ghaction@0.8.1
+        uses: hugoalh/disk-space-optimizer-ghaction@v0.8.1
         with:
           operate_sudo: "True"
           general_include: ".+"
