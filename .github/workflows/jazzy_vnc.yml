@@ -106,7 +106,7 @@ jobs:
       - name: Create and push Docker manifest
         run: |
           set -xe
-          docker manifest create --amend ${{ env.DOCKER_IMAGE_FINAL }} \
+          docker manifest create ${{ env.DOCKER_IMAGE_FINAL }} \
             ${{ env.DOCKER_IMAGE_AMD64 }} \
             ${{ env.DOCKER_IMAGE_ARM64 }}
           docker manifest push ${{ env.DOCKER_IMAGE_FINAL }}

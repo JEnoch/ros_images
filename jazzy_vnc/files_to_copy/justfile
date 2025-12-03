@@ -31,8 +31,8 @@ teleop:
    ros2 run teleop_twist_keyboard teleop_twist_keyboard
 
 # Run PlotJuggler
-plotj:
-   ros2 run plotjuggler plotjuggler
+plotj *ARGS:
+   ros2 run plotjuggler plotjuggler {{ARGS}}
 
 ###
 ### Network monitoring commands
